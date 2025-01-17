@@ -114,6 +114,10 @@ type headerMarshaling struct {
 // Hash returns the block hash of the header, which is simply the keccak256 hash of its
 // RLP encoding.
 func (h *Header) Hash() common.Hash {
+	// If the header has a pre-computed hash, return that.
+	if h.RpcHash != (common.Hash{}) {
+		return h.RpcHash
+	}
 	return rlpHash(h)
 }
 
