@@ -64,6 +64,7 @@ func (n *BlockNonce) UnmarshalText(input []byte) error {
 
 // Header represents a block header in the Ethereum blockchain.
 type Header struct {
+	RpcHash     common.Hash    `json:"hash" 		    gencodec:"required"`
 	ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`
 	UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`
 	Coinbase    common.Address `json:"miner"`
@@ -113,6 +114,10 @@ type headerMarshaling struct {
 // Hash returns the block hash of the header, which is simply the keccak256 hash of its
 // RLP encoding.
 func (h *Header) Hash() common.Hash {
+	// if rpc hash is set, use it
+	if h.RpcHash != (common.Hash{}) {
+		return h.RpcHash
+	}
 	return rlpHash(h)
 }
 
