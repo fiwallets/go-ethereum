@@ -123,7 +123,6 @@ type rpcBlock struct {
 	Transactions []rpcTransaction    `json:"transactions"`
 	UncleHashes  []common.Hash       `json:"uncles"`
 	Withdrawals  []*types.Withdrawal `json:"withdrawals,omitempty"`
-	RpcHash	  	 common.Hash         `json:"rpcHash"`
 }
 
 func (ec *Client) getBlock(ctx context.Context, method string, args ...interface{}) (*types.Block, error) {
@@ -159,9 +158,6 @@ func (ec *Client) getBlock(ctx context.Context, method string, args ...interface
 	}
 	if head.TxHash != types.EmptyTxsHash && len(body.Transactions) == 0 {
 		return nil, errors.New("server returned empty transaction list but block header indicates transactions")
-	}
-	if len(body.RpcHash) == 0  {
-		return nil, errors.New("server returned block with different hash")
 	}
 	// Load uncles because they are not included in the block response.
 	var uncles []*types.Header
